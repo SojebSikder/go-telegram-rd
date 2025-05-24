@@ -77,11 +77,17 @@ func main() {
 						progress := tgbotapi.NewMessage(update.Message.From.ID, "Downloading...")
 						bot.Send(progress)
 
-						file, filename, _ := DownloadFile(args, true)
+						file, filename, err := DownloadFile(args, true)
+						if err != nil {
+							log.Println(err)
+							msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Error downloading file")
+							bot.Send(msg)
+						} else {
+							// send file to user
+							privateFile := tgbotapi.NewDocument(update.Message.From.ID, tgbotapi.FileBytes{Name: filename, Bytes: file})
+							bot.Send(privateFile)
+						}
 
-						// send file to user
-						privateFile := tgbotapi.NewDocument(update.Message.From.ID, tgbotapi.FileBytes{Name: filename, Bytes: file})
-						bot.Send(privateFile)
 					}
 
 				}
