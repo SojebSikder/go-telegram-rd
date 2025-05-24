@@ -71,15 +71,17 @@ func main() {
 					} else {
 						file, filename, _ := DownloadFile(args, true)
 
-						// show download progress
+						// to group
+						privateMsg := tgbotapi.NewMessage(update.Message.Chat.ID, "File sent to you privately")
+						bot.Send(privateMsg)
+
+						// show download progress to user
 						progress := tgbotapi.NewMessage(update.Message.From.ID, "Downloading...")
 						bot.Send(progress)
 
+						// send file to user
 						privateFile := tgbotapi.NewDocument(update.Message.From.ID, tgbotapi.FileBytes{Name: filename, Bytes: file})
 						bot.Send(privateFile)
-
-						// privateMsg := tgbotapi.NewMessage(update.Message.From.ID, "File sent to you privately")
-						// bot.Send(privateMsg)
 					}
 
 				}
