@@ -62,17 +62,26 @@ func main() {
 					msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Usage: /d <url>")
 					bot.Send(msg)
 				} else {
-					file, filename, _ := DownloadFile(args, true)
+					free := IsResourceFree(args)
 
-					// show download progress
-					progress := tgbotapi.NewMessage(update.Message.From.ID, "Downloading...")
-					bot.Send(progress)
+					if free {
+						msg := tgbotapi.NewMessage(update.Message.Chat.ID, "This is already free. Don't waste my time.")
+						msg.ReplyToMessageID = update.Message.MessageID
+						bot.Send(msg)
+					} else {
+						file, filename, _ := DownloadFile(args, true)
 
-					privateFile := tgbotapi.NewDocument(update.Message.From.ID, tgbotapi.FileBytes{Name: filename, Bytes: file})
-					bot.Send(privateFile)
+						// show download progress
+						progress := tgbotapi.NewMessage(update.Message.From.ID, "Downloading...")
+						bot.Send(progress)
 
-					// privateMsg := tgbotapi.NewMessage(update.Message.From.ID, "File sent to you privately")
-					// bot.Send(privateMsg)
+						privateFile := tgbotapi.NewDocument(update.Message.From.ID, tgbotapi.FileBytes{Name: filename, Bytes: file})
+						bot.Send(privateFile)
+
+						// privateMsg := tgbotapi.NewMessage(update.Message.From.ID, "File sent to you privately")
+						// bot.Send(privateMsg)
+					}
+
 				}
 			default:
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "I don't know that command")

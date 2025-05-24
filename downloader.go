@@ -10,6 +10,16 @@ import (
 	"strings"
 )
 
+// Check if the freepik resource is free or premium
+func IsResourceFree(url string) bool {
+	parts := strings.Split(url, "/")
+	isFree := parts[3]
+
+	isFree = strings.Split(isFree, "-")[0]
+
+	return isFree == "free"
+}
+
 func ExtractResourceID(url string) string {
 	parts := strings.Split(url, "/")
 	resourceID := parts[len(parts)-1]
