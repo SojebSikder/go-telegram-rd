@@ -49,7 +49,7 @@ func main() {
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "I can help you with your questions. Just ask me anything!")
 				bot.Send(msg)
 			case "about":
-				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Resource downloader bot")
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Resource downloader bot created by @sojebsikder")
 				bot.Send(msg)
 			case "contact":
 				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "You can contact me at @sojebsikder")
