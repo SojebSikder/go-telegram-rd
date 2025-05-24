@@ -40,33 +40,44 @@ func main() {
 
 		log.Printf("[%s] %s", update.Message.From.UserName, update.Message.Text)
 
-		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "You said: "+update.Message.Text)
-
 		if update.Message.IsCommand() {
 			switch update.Message.Command() {
 			case "start":
-				msg.Text = "Hello! I'm a bot. I can help you with your questions."
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Hello! I'm a bot. I can help you with your questions.")
+				bot.Send(msg)
 			case "help":
-				msg.Text = "I can help you with your questions. Just ask me anything!"
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "I can help you with your questions. Just ask me anything!")
+				bot.Send(msg)
 			case "about":
-				msg.Text = "Resource downloader bot"
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Resource downloader bot")
+				bot.Send(msg)
 			case "contact":
-				msg.Text = "You can contact me at @sojebsikder"
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "You can contact me at @sojebsikder")
+				bot.Send(msg)
 			case "d":
 				// get the value after /d
 				args := update.Message.CommandArguments()
 
 				if args == "" {
-					msg.Text = "Usage: /say something"
+					msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Usage: /d <url>")
+					bot.Send(msg)
 				} else {
-					DownloadFile(args)
-					msg.Text = "File downloaded successfully"
+					file, filename, _ := DownloadFile(args, true)
+
+					// show download progress
+					progress := tgbotapi.NewMessage(update.Message.From.ID, "Downloading...")
+					bot.Send(progress)
+
+					privateFile := tgbotapi.NewDocument(update.Message.From.ID, tgbotapi.FileBytes{Name: filename, Bytes: file})
+					bot.Send(privateFile)
+
+					// privateMsg := tgbotapi.NewMessage(update.Message.From.ID, "File sent to you privately")
+					// bot.Send(privateMsg)
 				}
 			default:
-				msg.Text = "I don't know that command"
+				msg := tgbotapi.NewMessage(update.Message.Chat.ID, "I don't know that command")
+				bot.Send(msg)
 			}
-
-			bot.Send(msg)
 		} else {
 			msg := tgbotapi.NewMessage(update.Message.Chat.ID, "You said: "+update.Message.Text)
 			msg.ReplyToMessageID = update.Message.MessageID
