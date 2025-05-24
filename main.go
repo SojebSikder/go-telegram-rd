@@ -69,8 +69,6 @@ func main() {
 						msg.ReplyToMessageID = update.Message.MessageID
 						bot.Send(msg)
 					} else {
-						file, filename, _ := DownloadFile(args, true)
-
 						// to group
 						privateMsg := tgbotapi.NewMessage(update.Message.Chat.ID, "File sent to you privately")
 						bot.Send(privateMsg)
@@ -78,6 +76,8 @@ func main() {
 						// show download progress to user
 						progress := tgbotapi.NewMessage(update.Message.From.ID, "Downloading...")
 						bot.Send(progress)
+
+						file, filename, _ := DownloadFile(args, true)
 
 						// send file to user
 						privateFile := tgbotapi.NewDocument(update.Message.From.ID, tgbotapi.FileBytes{Name: filename, Bytes: file})
